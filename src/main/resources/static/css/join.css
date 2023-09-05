@@ -1,0 +1,12 @@
+#local-video-element {
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+    width: 240px;
+    height: auto;
+    z-index: 9999;
+}
+
+#remote-video-element{
+    width: 100%;
+  }

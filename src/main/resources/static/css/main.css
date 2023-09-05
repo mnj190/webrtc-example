@@ -1,0 +1,16 @@
+.underline-input {
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid white;
+    box-sizing: border-box;
+    margin-bottom: 1rem;
+}
+
+.underline-input:focus {
+    outline: none;
+}
+
+.white {
+    color: white;
+    font-size: 24px;
+}
