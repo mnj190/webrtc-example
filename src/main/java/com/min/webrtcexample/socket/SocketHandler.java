@@ -1,5 +1,6 @@
 package com.min.webrtcexample.socket;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 @Component
 public class SocketHandler extends TextWebSocketHandler {
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private final Map<String, String> sessions = new ConcurrentHashMap<>(); // sessionId, name
     private final Map<String, List<WebSocketSession>> rooms = new HashMap<>(); // name, session
 
@@ -66,6 +68,14 @@ public class SocketHandler extends TextWebSocketHandler {
             if(sessions.size() == 1) {
                 sessions.add(session);
             } else {
+                Map<String, Object> messageMap = new HashMap<>();
+                messageMap.put("event", "error");
+                messageMap.put("data", "이미 방이 꽉 찼습니다.");
+
+                String jsonData = objectMapper.writeValueAsString(messageMap);
+
+                TextMessage message = new TextMessage(jsonData);
+                session.sendMessage(message);
                 return;
             }
 
@@ -86,14 +96,20 @@ public class SocketHandler extends TextWebSocketHandler {
         List<WebSocketSession> sessions = this.rooms.getOrDefault(name, null);
 
         if(sessions != null) {
-            sessions = sessions.stream()
-                    .filter(value -> !value.equals(session))
-                    .collect(Collectors.toList());
+            if(sessions.size() == 1) {
+                rooms.remove(name);
+            } else {
+                sessions = sessions.stream()
+                        .filter(value -> !value.equals(session))
+                        .collect(Collectors.toList());
 
-            this.rooms.put(name, sessions);
+                this.rooms.put(name, sessions);
+            }
         }
 
         this.sessions.remove(session.getId());
     }
+
+
 }
 

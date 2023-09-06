@@ -8,6 +8,7 @@
     <meta name="generator" content="Hugo 0.84.0">
     <title>WebRTC-Examples</title>
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/cover/">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/cover.css" rel="stylesheet">
     <link href="/css/join.css" rel="stylesheet">
@@ -15,12 +16,19 @@
     <script src="/js/join.js"></script>
 </head>
 
-<body class="d-flex h-100 text-center text-white bg-dark">
-    <input id="name" type="hidden" th:value="${name}">
+<body class="h-100 text-center text-white bg-dark">
+    <header class="mb-auto">
+        <div class="d-flex float-md-start mb-0 white-radius-box">
+            <button class="white-button arrow-left"></button>
+            <button class="white-button volume-off"></button>
+            <button class="white-button arrows-rotate"></button>
+        </div>
+    </header>
 
-    <video id="remote-video-element" autoplay></video>
-
-    <video id="local-video-element" autoplay></video>
-
+    <main>
+        <input id="name" type="hidden" th:value="${name}">
+        <video id="remote-video-element" autoplay></video>
+        <video id="local-video-element" autoplay></video>
+    </main>
 </body>
 </html>

@@ -26,7 +26,8 @@ navigator.mediaDevices.getUserMedia(constraints)
             createPeearConncetion();
         };
     }).catch(function(err) {
-    console.log(err)
+        alert("카메라를 사용할 수 없습니다.");
+        console.log(err)
 });
 
 window.onload = function() {
@@ -59,6 +60,12 @@ function socketSetting() {
             case 'answer':
                 const answer = data.data;
                 peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+                break;
+            case 'error':
+                const message = data.data;
+                alert(message);
+                // window.history.back();
+                break;
             default:
                 break;
         }
@@ -101,8 +108,20 @@ function createPeearConncetion() {
     peerConnection.ondatachannel = function (event) {
         dataChannel = event.channel;
     };
+
+    peerConnection.onconnectionstatechange = function (event) {
+        if (peerConnection.iceConnectionState === 'disconnected') {
+            const remoteVideoElement = document.querySelector('#remote-video-element');
+            remoteVideoElement.srcObject = remoteStream;
+        }
+    };
 }
 
 function send(message) {
     conn.send(JSON.stringify(message));
 }
+
+function submit(e) {
+    console.log(e.closest('form').submit());
+}
+

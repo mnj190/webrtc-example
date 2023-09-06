@@ -51,3 +51,48 @@ body {
   color: #fff;
   border-bottom-color: #fff;
 }
+
+.white-radius-box button {
+  border: 1px solid white;
+  height: 3rem;
+  width: 3rem;
+}
+
+.white-radius-box button:first-child {
+  border-radius: 5px 0px 0px 5px;
+}
+
+.white-radius-box button:last-child {
+  border-radius: 0px 5px 5px 0px;
+}
+
+.white-button {
+  background-color: white; /* make the button transparent */
+  background-repeat: no-repeat;  /* make the background image appear only once */
+  background-position: 0px 0px;  /* equivalent to 'top left' */
+  border: none;           /* assuming we don't want any borders */
+  cursor: pointer;        /* make the cursor like hovering over an <a> element */
+  height: 16px;           /* make this the size of your image */
+  padding-left: 16px;     /* make text start to the right of the image */
+  vertical-align: middle; /* align the text vertically centered */
+}
+
+.arrow-left {
+  background-image: url(/icon/arrow-left-solid.svg); /* 16px x 16px */
+}
+
+.volume-xmark {
+  background-image: url(/icon/volume-xmark-solid.svg); /* 16px x 16px */
+}
+
+.volume-high {
+  background-image: url(/icon/volume-high-solid.svg); /* 16px x 16px */
+}
+
+.volume-off {
+  background-image: url(/icon/volume-off-solid.svg); /* 16px x 16px */
+}
+
+.arrows-rotate {
+  background-image: url(/icon/arrows-rotate-solid.svg); /* 16px x 16px */
+}
