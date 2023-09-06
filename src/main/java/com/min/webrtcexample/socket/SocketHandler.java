@@ -27,6 +27,8 @@ public class SocketHandler extends TextWebSocketHandler {
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message)
             throws InterruptedException, IOException {
+        log.info(message.getPayload());
+
         String name = sessions.get(session.getId());
         List<WebSocketSession> sessions = this.rooms.getOrDefault(name, null);
 

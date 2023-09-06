@@ -53,7 +53,7 @@ body {
 }
 
 .white-radius-box button {
-  border: 1px solid white;
+  /*border: 1px solid white;*/
   height: 3rem;
   width: 3rem;
 }
@@ -67,7 +67,7 @@ body {
 }
 
 .white-button {
-  background-color: white; /* make the button transparent */
+  background-color: transparent; /* make the button transparent */
   background-repeat: no-repeat;  /* make the background image appear only once */
   background-position: 0px 0px;  /* equivalent to 'top left' */
   border: none;           /* assuming we don't want any borders */

@@ -7,13 +7,13 @@
     z-index: 9999;
     border: white 2px solid;
     border-radius: 5px;
-    transform: scaleX(-1);
+    /*transform: scaleX(-1);*/
 }
 
 #remote-video-element{
     width: 100%;
     height: 100%;
-    transform: scaleX(-1);
+    /*transform: scaleX(-1);*/
   }
 
 main{
@@ -21,6 +21,31 @@ main{
     height: 100%;
 }
 
-hader{
-    /*position: absolute;*/
+header{
+    z-index: 9999;
+    position: fixed;
+    left: 10px;
+    top : 10px;
+}
+
+header ul{
+    list-style:none;
+    padding-left:0px;
+}
+
+header a {
+    font-size: 30px;
+    color: #d9dade;
+}
+
+header a:link {
+    color: #d9dade; text-decoration: none;
+}
+
+header a:visited {
+    color: #d9dade; text-decoration: none;
+}
+
+header a:hover {
+    color: #d9dade; text-decoration: underline;
 }
