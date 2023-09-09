@@ -12,7 +12,7 @@
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/cover.css" rel="stylesheet">
     <link href="/css/join.css" rel="stylesheet">
-    <script src="/js/join.js"></script>
+    <script src="/js/join.js" defer></script>
 </head>
 
 <body class="h-100 text-center text-white bg-dark">
@@ -25,15 +25,18 @@
                 <a href="javascript:void(0);" class="mute-btn"><i class="fas fa-volume-mute volume-icon"></i></a>
             </li>
             <li>
-                <a href="javascript:void(0);" class="screen-change-btn"><i class="fas fa-sync-alt"></i></a>
+                <a href="javascript:void(0);" class="mic-btn"><i class="fas fa-microphone-slash"></i></a>
             </li>
+<!--            <li>-->
+<!--                <a href="javascript:void(0);" class="screen-change-btn"><i class="fas fa-sync-alt"></i></a>-->
+<!--            </li>-->
         </ul>
     </header>
 
     <main>
         <input id="name" type="hidden" th:value="${name}">
         <video id="remote-video-element" autoplay></video>
-        <video id="local-video-element" autoplay></video>
+        <video id="local-video-element" autoplay muted="true"></video>
     </main>
 </body>
 </html>
