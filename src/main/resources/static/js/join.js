@@ -1,83 +1,58 @@
 let conn = null;
 let peerConnection = null;
 let dataChannel = null;
-let localStream = new MediaStream();
+let localStream = null;
 let remoteStream = new MediaStream();
 
-const constraints = {
-    video: true, audio : true
-};
+const remoteVideoElement = document.querySelector('#remote-video-element');
+const localVideoElement = document.querySelector('#local-video-element');
 
-let isMuted = false;
+const muteBtnElemnt = document.querySelector('.mute-btn');
+const micBtnElemnt = document.querySelector('.mic-btn');
+
+const constraints = {
+    video: true,audio : true
+};
 
 navigator.mediaDevices.getUserMedia(constraints)
     .then(function(stream) {
-        const remoteVideoElement = document.querySelector('#remote-video-element');
         remoteVideoElement.srcObject = remoteStream;
-
-        const localVideoElement = document.querySelector('#local-video-element');
         localVideoElement.srcObject = stream;
-
         localStream = stream;
-        // createPeearConncetion();
+
+        const name = document.querySelector('#name').value;
+
+        conn = new WebSocket(`ws://localhost:8080/socket?name=${name}`);
+
+        conn.onopen = (event) => {
+            socketSetting();
+            createPeearConncetion();
+        };
     }).catch(function(err) {
-    alert("카메라를 사용할 수 없습니다.");
-    console.log(err)
+        alert('카메라를 사용할 수 없습니다.');
+        console.log(err)
 });
 
 window.onload = function() {
-    const localVideoElement = document.querySelector('#local-video-element');
-    localVideoElement.srcObject = localStream;
-
-    const remoteVideoElement = document.querySelector('#remote-video-element');
-    remoteVideoElement.srcObject = remoteStream;
-
-    const name = document.querySelector('#name').value;
-
-    conn = new WebSocket(`ws://localhost:8080/socket?name=${name}`);
-
-    conn.onopen = (event) => {
-        socketSetting();
-        createPeearConncetion();
-    };
-
-    document.querySelector('.screen-change-btn').addEventListener('click', (e) => {
-        navigator.mediaDevices.getDisplayMedia({ video: true, audio : true }).then(
-            function(stream) {
-                streamClear(localStream);
-
-                const localVideoElement = document.querySelector('#local-video-element');
-                localVideoElement.srcObject = stream;
-                localStream = stream;
-
-                createPeearConncetion();
-            }
-        );
+    muteBtnElemnt.addEventListener('click', (e) => {
+        remoteVideoElement.muted = !remoteVideoElement.muted;
+        const icon = muteBtnElemnt.children[0];
+        icon.classList.toggle('fa-volume-mute', !remoteVideoElement.muted);
+        icon.classList.toggle('fa-volume-up', remoteVideoElement.muted);
     })
 
-    document.querySelector('.mute-btn').addEventListener("click", () => {
-        const volumeIcon = document.querySelector('.volume-icon');
-        console.log('test');
-
-        if (isMuted) {
-            volumeIcon.classList.remove("fa-volume-mute");
-            volumeIcon.classList.add("fa-volume-up");
-            isMuted = false;
-        } else {
-            // 음소거 설정
-            volumeIcon.classList.remove("fa-volume-up");
-            volumeIcon.classList.add("fa-volume-mute");
-            isMuted = true;
-        }
-    });
+    micBtnElemnt.addEventListener('click', (e) => {
+        localStream.getAudioTracks()[0].enabled = !localStream.getAudioTracks()[0].enabled;
+        const icon = micBtnElemnt.children[0];
+        icon.classList.toggle('fa-microphone-slash', localStream.getAudioTracks()[0].enabled);
+        icon.classList.toggle('fa-microphone', !localStream.getAudioTracks()[0].enabled);
+    })
 };
 
 function socketSetting() {
     conn.onmessage = (e) => {
         const data = JSON.parse(e.data)
         const event = data.event;
-
-        console.log('evnet = ' + event);
 
         switch (event) {
             case 'offer':
@@ -117,22 +92,17 @@ function socketSetting() {
 }
 
 function createPeearConncetion() {
-    if(peerConnection != null)
-        peerConnection.close();
-
-    streamClear(remoteStream);
-
     peerConnection = new RTCPeerConnection(null);
 
-    if(localStream != null) {
-        localStream.getTracks().forEach(function (track) {
-            peerConnection.addTrack(track, localStream);
-        });
-    }
+    localStream.getTracks().forEach(function(track) {
+        peerConnection.addTrack(track, localStream);
+    });
 
     peerConnection.ontrack = function(event) {
         const track = event.track;
         remoteStream.addTrack(track);
+
+        console.log(track);
     };
 
     peerConnection.createOffer(function(offer) {
@@ -157,25 +127,8 @@ function createPeearConncetion() {
     peerConnection.ondatachannel = function (event) {
         dataChannel = event.channel;
     };
-
-    peerConnection.onconnectionstatechange = function (event) {
-        if (peerConnection.iceConnectionState === 'disconnected') {
-            const remoteVideoElement = document.querySelector('#remote-video-element');
-            remoteVideoElement.srcObject = remoteStream;
-        }
-    };
 }
 
 function send(message) {
     conn.send(JSON.stringify(message));
 }
-
-function streamClear(stream) {
-    if(stream != null) {
-        stream.getTracks().forEach(track => {
-            track.stop();
-            stream.removeTrack(track);
-        });
-    }
-}
-
