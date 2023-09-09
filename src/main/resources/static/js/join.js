@@ -5,9 +5,10 @@ let localStream = new MediaStream();
 let remoteStream = new MediaStream();
 
 const constraints = {
-    video: true,audio : false
+    video: true, audio : true
 };
 
+let isMuted = false;
 
 navigator.mediaDevices.getUserMedia(constraints)
     .then(function(stream) {
@@ -15,16 +16,13 @@ navigator.mediaDevices.getUserMedia(constraints)
         remoteVideoElement.srcObject = remoteStream;
 
         const localVideoElement = document.querySelector('#local-video-element');
-        // localVideoElement.srcObject = stream;
+        localVideoElement.srcObject = stream;
 
-        stream.getTracks().forEach(function (track) {
-            localStream.addTrack(track);
-        });
-
-        // localStream = stream;
+        localStream = stream;
+        // createPeearConncetion();
     }).catch(function(err) {
-        alert("카메라를 사용할 수 없습니다.");
-        console.log(err)
+    alert("카메라를 사용할 수 없습니다.");
+    console.log(err)
 });
 
 window.onload = function() {
@@ -34,10 +32,7 @@ window.onload = function() {
     const remoteVideoElement = document.querySelector('#remote-video-element');
     remoteVideoElement.srcObject = remoteStream;
 
-
     const name = document.querySelector('#name').value;
-
-
 
     conn = new WebSocket(`ws://localhost:8080/socket?name=${name}`);
 
@@ -51,23 +46,38 @@ window.onload = function() {
             function(stream) {
                 streamClear(localStream);
 
-                stream.getTracks().forEach(function (track) {
-                    console.log('test');
-                    localStream.addTrack(track);
-                });
+                const localVideoElement = document.querySelector('#local-video-element');
+                localVideoElement.srcObject = stream;
+                localStream = stream;
 
                 createPeearConncetion();
             }
         );
     })
+
+    document.querySelector('.mute-btn').addEventListener("click", () => {
+        const volumeIcon = document.querySelector('.volume-icon');
+        console.log('test');
+
+        if (isMuted) {
+            volumeIcon.classList.remove("fa-volume-mute");
+            volumeIcon.classList.add("fa-volume-up");
+            isMuted = false;
+        } else {
+            // 음소거 설정
+            volumeIcon.classList.remove("fa-volume-up");
+            volumeIcon.classList.add("fa-volume-mute");
+            isMuted = true;
+        }
+    });
 };
 
 function socketSetting() {
-    const remoteVideoElement = document.querySelector('#remote-video-element');
-
     conn.onmessage = (e) => {
         const data = JSON.parse(e.data)
         const event = data.event;
+
+        console.log('evnet = ' + event);
 
         switch (event) {
             case 'offer':
@@ -107,6 +117,11 @@ function socketSetting() {
 }
 
 function createPeearConncetion() {
+    if(peerConnection != null)
+        peerConnection.close();
+
+    streamClear(remoteStream);
+
     peerConnection = new RTCPeerConnection(null);
 
     if(localStream != null) {
@@ -118,8 +133,6 @@ function createPeearConncetion() {
     peerConnection.ontrack = function(event) {
         const track = event.track;
         remoteStream.addTrack(track);
-
-        console.log(track);
     };
 
     peerConnection.createOffer(function(offer) {
@@ -157,13 +170,12 @@ function send(message) {
     conn.send(JSON.stringify(message));
 }
 
-function submit(e) {
-    console.log(e.closest('form').submit());
-}
-
 function streamClear(stream) {
     if(stream != null) {
-        stream.getTracks().forEach(track => track.stop());
+        stream.getTracks().forEach(track => {
+            track.stop();
+            stream.removeTrack(track);
+        });
     }
 }
 

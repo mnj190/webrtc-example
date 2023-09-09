@@ -38,6 +38,10 @@ header a {
     color: #d9dade;
 }
 
+header a i {
+    width: 30px;
+}
+
 header a:link {
     color: #d9dade; text-decoration: none;
 }

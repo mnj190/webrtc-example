@@ -76,23 +76,3 @@ body {
   padding-left: 16px;     /* make text start to the right of the image */
   vertical-align: middle; /* align the text vertically centered */
 }
-
-.arrow-left {
-  background-image: url(/icon/arrow-left-solid.svg); /* 16px x 16px */
-}
-
-.volume-xmark {
-  background-image: url(/icon/volume-xmark-solid.svg); /* 16px x 16px */
-}
-
-.volume-high {
-  background-image: url(/icon/volume-high-solid.svg); /* 16px x 16px */
-}
-
-.volume-off {
-  background-image: url(/icon/volume-off-solid.svg); /* 16px x 16px */
-}
-
-.arrows-rotate {
-  background-image: url(/icon/arrows-rotate-solid.svg); /* 16px x 16px */
-}
