@@ -78,6 +78,7 @@ public class SocketHandler extends TextWebSocketHandler {
 
                 TextMessage message = new TextMessage(jsonData);
                 session.sendMessage(message);
+                session.close();
                 return;
             }
 
