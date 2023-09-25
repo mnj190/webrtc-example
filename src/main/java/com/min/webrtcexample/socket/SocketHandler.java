@@ -68,6 +68,17 @@ public class SocketHandler extends TextWebSocketHandler {
             log.info("session size = " + sessions.size());
 
             if(sessions.size() == 1) {
+                for(WebSocketSession temp : sessions) {
+                    Map<String, Object> messageMap = new HashMap<>();
+                    messageMap.put("event", "join");
+                    messageMap.put("data", session.getId() + "님이 입장하였습니다.");
+
+                    String jsonData = objectMapper.writeValueAsString(messageMap);
+
+                    TextMessage message = new TextMessage(jsonData);
+                    temp.sendMessage(message);
+                }
+
                 sessions.add(session);
             } else {
                 Map<String, Object> messageMap = new HashMap<>();

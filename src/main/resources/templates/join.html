@@ -27,15 +27,16 @@
             <li>
                 <a href="javascript:void(0);" class="mic-btn"><i class="fas fa-microphone-slash"></i></a>
             </li>
-<!--            <li>-->
-<!--                <a href="javascript:void(0);" class="screen-change-btn"><i class="fas fa-sync-alt"></i></a>-->
-<!--            </li>-->
+            <li>
+                <a href="javascript:void(0);" class="screen-share-btn"><i class="fas fa-desktop"></i></a>
+            </li>
         </ul>
     </header>
 
     <main>
         <input id="name" type="hidden" th:value="${name}">
         <video id="remote-video-element" autoplay></video>
+        <i class="fas fa-play play" style="display: none;"></i>
         <video id="local-video-element" autoplay muted="true"></video>
     </main>
 </body>
